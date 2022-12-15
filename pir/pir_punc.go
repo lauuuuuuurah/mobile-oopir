@@ -216,8 +216,9 @@ func (c *PuncClient) initSets2(threshold float64) {
 					c.IdxToSetIdx[shiftedV] = int32(i)
 					mappedIndex++
 				}
-				counter++
+
 			}
+			counter++
 		}
 	}
 	// fmt.Printf("%d/%d Slots in Mapping are filled with threshold of %f \n", mappedIndex, len(c.IdxToSetIdx), threshold)
