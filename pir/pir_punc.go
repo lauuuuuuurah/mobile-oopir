@@ -204,6 +204,7 @@ func (c *PuncClient) initSets2(threshold float64) {
 	}
 	var pset PuncturableSet
 	mappedIndex := 0
+	counter := 0
 	for i := 0; i < len(c.hints); i++ {
 		c.origSetGen.Gen_NoShift(&pset)
 		c.sets[i] = pset.SetKey
@@ -215,11 +216,12 @@ func (c *PuncClient) initSets2(threshold float64) {
 					c.IdxToSetIdx[shiftedV] = int32(i)
 					mappedIndex++
 				}
+				counter++
 			}
 		}
 	}
 	// fmt.Printf("%d/%d Slots in Mapping are filled with threshold of %f \n", mappedIndex, len(c.IdxToSetIdx), threshold)
-
+	log.Printf("%d sets were considered to fill %f of mapping table", counter, threshold)
 	// Use a separate set generator with a new key for all future sets
 	// since they must look random to the left server.
 	var newSetGenKey PRGKey
