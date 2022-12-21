@@ -170,9 +170,7 @@ func (c *PuncClient) initSets() {
 		c.origSetGen.Gen(&pset)
 		c.sets[i] = pset.SetKey
 		for _, j := range pset.elems {
-			if c.IdxToSetIdx[j] == -1 {
-				c.IdxToSetIdx[j] = int32(i)
-			}
+			c.IdxToSetIdx[j] = int32(i)
 		}
 	}
 	// Use a separate set generator with a new key for all future sets
@@ -259,8 +257,8 @@ func (c *PuncClient) findIndex(i int) (setIdx int) {
 	}
 	var pset PuncturableSet
 	//go through sets in reverse to avoid invalidating entries in IdxToSetIdx, which gets populated starting from 0
-	//for j := range c.sets {
-	for j := len(c.sets) - 1; j >= 0; j-- {
+	for j := range c.sets {
+		//for j := len(c.sets) - 1; j >= 0; j-- {
 		setGen := c.setGenForSet(j)
 		setKeyNoShift := c.sets[j]
 		shift := setKeyNoShift.shift
@@ -273,10 +271,10 @@ func (c *PuncClient) findIndex(i int) (setIdx int) {
 				return j
 			}
 			// Main performance Bottleneck on client side
-			// if shiftedV < c.nRows {
-			// 	// upgrade invalid pointer to valid one
-			// 	c.idxToSetIdx[shiftedV] = int32(j)
-			// }
+			if shiftedV < c.nRows {
+				// upgrade invalid pointer to valid one
+				c.IdxToSetIdx[shiftedV] = int32(j)
+			}
 		}
 	}
 	return -1
@@ -381,9 +379,7 @@ func (c *PuncClient) replaceSet(setIdx int, newSet PuncturableSet) {
 	}
 	c.sets[setIdx] = newSet.SetKey
 	for _, v := range newSet.elems {
-		if c.IdxToSetIdx[v] == -1 {
-			c.IdxToSetIdx[v] = int32(setIdx)
-		}
+		c.IdxToSetIdx[v] = int32(setIdx)
 	}
 }
 
